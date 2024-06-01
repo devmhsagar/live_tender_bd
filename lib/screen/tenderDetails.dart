@@ -1,26 +1,86 @@
 import 'package:flutter/material.dart';
+import 'package:live_tender_bd/screen/homepage.dart';
 
-class TenderDetailsScreen extends StatelessWidget {
-  final Map<String, dynamic> data;
+class TenderDetailScreen extends StatelessWidget {
+  final Tender tender;
 
-  const TenderDetailsScreen({Key? key, required this.data}) : super(key: key);
+  const TenderDetailScreen({Key? key, required this.tender}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(data['tenderTitle']),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+        title: const Text('Tender Details'),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Department: ${data['department']}'),
-            Text('Location: ${data['location']}'),
-            Text('Last Date: ${data['lastDate']}'),
-            // Add more details as needed
-          ],
+        padding: const EdgeInsets.only(left: 18.0, right: 18.0),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                color: Colors.black,
+                padding:
+                    const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                width: double.infinity,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('Tender ID-${tender.id}',
+                        style: const TextStyle(color: Colors.white)),
+                    Text(tender.type,
+                        style: const TextStyle(color: Colors.white)),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text('Name of Work: ${tender.description}'),
+              const SizedBox(height: 8),
+              Text('Department: ${tender.department}'),
+              const SizedBox(height: 8),
+              Text('Location: ${tender.location}'),
+              const SizedBox(height: 8),
+              Text('LastDate: ${tender.lastDate}'),
+              const SizedBox(height: 8),
+              Text('Doc Price: ${tender.docPrice}'),
+              const SizedBox(height: 8),
+              Text('Tender Security: ${tender.tenderSecurity}'),
+              const SizedBox(height: 8),
+              Text('Liquid: ${tender.liquid}'),
+              const SizedBox(height: 8),
+              Text('Similar: ${tender.similar}'),
+              const SizedBox(height: 8),
+              Text('Turnover: ${tender.turnover}'),
+              const SizedBox(height: 8),
+              Text('Tender Capacity: ${tender.tenderCapacity}'),
+              const SizedBox(height: 8),
+              Text('Others: ${tender.others}'),
+              const SizedBox(height: 16),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.black,
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                  ),
+                  child: const Text('Cancel',
+                      style: TextStyle(color: Colors.white)),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
