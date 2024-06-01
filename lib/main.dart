@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:live_tender_bd/database/services_model.dart';
 import 'package:live_tender_bd/screen/homepage.dart';
 import 'package:live_tender_bd/screen/tenderDetails.dart';
 

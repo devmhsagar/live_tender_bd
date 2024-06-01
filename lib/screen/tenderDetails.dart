@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:live_tender_bd/screen/homepage.dart';
+import 'package:live_tender_bd/database/services_model.dart'; // Importing the Tender class
 
 class TenderDetailScreen extends StatelessWidget {
-  final Tender tender;
-
-  const TenderDetailScreen({Key? key, required this.tender}) : super(key: key);
-
+  final Map<String, dynamic> tender;
+  TenderDetailScreen({Key? key, required this.tender}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,41 +24,42 @@ class TenderDetailScreen extends StatelessWidget {
             children: [
               Container(
                 color: Colors.black,
-                padding:
-                    const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
                 width: double.infinity,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('Tender ID-${tender.id}',
+                    Text('Tender ID-${tender['tenderId']}',
                         style: const TextStyle(color: Colors.white)),
-                    Text(tender.type,
+                    Text(tender['method'],
                         style: const TextStyle(color: Colors.white)),
                   ],
                 ),
               ),
               const SizedBox(height: 8),
-              Text('Name of Work: ${tender.description}'),
+              Text('Name of Work: ${tender['nameOfWork']}'),
               const SizedBox(height: 8),
-              Text('Department: ${tender.department}'),
+              Text('Department: ${tender['department']}'),
               const SizedBox(height: 8),
-              Text('Location: ${tender.location}'),
+              Text('Location: ${tender['location']}'),
               const SizedBox(height: 8),
-              Text('LastDate: ${tender.lastDate}'),
+              Text('LastDate: ${tender['tenderLastDate']}'),
               const SizedBox(height: 8),
-              Text('Doc Price: ${tender.docPrice}'),
+              Text('Doc Price: ${tender['docPrice']}'),
               const SizedBox(height: 8),
-              Text('Tender Security: ${tender.tenderSecurity}'),
+              Text('Tender Security: ${tender['tenderSecurity']}'),
               const SizedBox(height: 8),
-              Text('Liquid: ${tender.liquid}'),
+              Text('Liquid: ${tender['liquid']}'),
               const SizedBox(height: 8),
-              Text('Similar: ${tender.similar}'),
+              Text('Similar: ${tender['similar']}'),
               const SizedBox(height: 8),
-              Text('Turnover: ${tender.turnover}'),
+              Text('Turnover: ${tender['turnover']}'),
               const SizedBox(height: 8),
-              Text('Tender Capacity: ${tender.tenderCapacity}'),
+              Text('Tender Capacity: ${tender['tenderCapacity']}'),
               const SizedBox(height: 8),
-              Text('Others: ${tender.others}'),
+              Text('Others: ${tender['others']}'),
+              const SizedBox(height: 16),
+              Text('Tender LastDate: ${tender['tenderLastDate']}'),
               const SizedBox(height: 16),
               SizedBox(
                 width: double.infinity,
