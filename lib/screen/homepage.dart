@@ -3,15 +3,21 @@ import 'package:flutter/material.dart';
 import 'package:live_tender_bd/database/services.dart';
 import 'package:live_tender_bd/screen/tenderDetails.dart';
 
-
-
 class TenderListScreen extends StatefulWidget {
+  const TenderListScreen({super.key});
+
   @override
   _TenderListScreenState createState() => _TenderListScreenState();
 }
 
 class _TenderListScreenState extends State<TenderListScreen> {
-  DatabaseMethods _databaseMethods = DatabaseMethods();
+  final DatabaseMethods _databaseMethods = DatabaseMethods();
+  String searchQuery = '';
+  String filterMethod = '';
+  final FocusNode searchFocusNode = FocusNode();
+  final TextEditingController searchController = TextEditingController();
+
+  List<String> tenderMethods = ['LTM', 'OTM', 'OSTETM', 'RFQ', 'RFQU'];
 
   @override
   Widget build(BuildContext context) {
@@ -21,8 +27,8 @@ class _TenderListScreenState extends State<TenderListScreen> {
           children: [
             Image.asset(
               'assets/images/splash_logo.png',
-              height: 40,
-              width: 40,
+              height: 35,
+              width: 35,
             ),
             const SizedBox(width: 8),
             const Text('Live Tender BD'),
@@ -38,55 +44,128 @@ class _TenderListScreenState extends State<TenderListScreen> {
           ],
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.search),
-                      hintText: 'Search',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: BorderSide.none,
+      body: GestureDetector(
+        onTap: () {
+          searchFocusNode.unfocus();
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      focusNode: searchFocusNode,
+                      controller: searchController,
+                      onChanged: (value) {
+                        setState(() {
+                          searchQuery = value.toLowerCase();
+                        });
+                      },
+                      decoration: InputDecoration(
+                        prefixIcon: const Icon(Icons.search),
+                        hintText: 'Search',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: BorderSide.none,
+                        ),
+                        filled: true,
+                        fillColor: Colors.grey[200],
                       ),
-                      filled: true,
-                      fillColor: Colors.grey[200],
                     ),
                   ),
-                ),
-                const SizedBox(width: 0),
-                IconButton(
-                  icon: const Icon(Icons.filter_list),
-                  onPressed: () {},
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            Expanded(
-              child: StreamBuilder<QuerySnapshot>(
-                stream: _databaseMethods.getTenderDetails(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator());
-                  }
-                  if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                    return Center(child: Text('No tenders available'));
-                  }
-                  return ListView.builder(
-                    itemCount: snapshot.data!.docs.length,
-                    itemBuilder: (context, index) {
-                      var tender = snapshot.data!.docs[index].data();
-                      return TenderCard(tender: tender as Map<String, dynamic>);
+                  const SizedBox(width: 8),
+                  PopupMenuButton<String>(
+                    icon: const Icon(Icons.filter_list),
+                    onSelected: (value) {
+                      setState(() {
+                        if (value == 'Reset Filter') {
+                          filterMethod = '';
+                          searchQuery = '';
+                          searchController.clear();
+                        } else {
+                          filterMethod = value;
+                        }
+                      });
                     },
-                  );
-                },
+                    itemBuilder: (BuildContext context) {
+                      return [
+                        ...tenderMethods.map((String method) {
+                          return PopupMenuItem<String>(
+                            value: method,
+                            child: Text(method),
+                          );
+                        }).toList(),
+                        const PopupMenuItem<String>(
+                          value: 'Reset Filter',
+                          child: Text('ALL'),
+                        ),
+                      ];
+                    },
+                  ),
+                ],
               ),
-            ),
-          ],
+              const SizedBox(height: 16),
+              Expanded(
+                child: StreamBuilder<QuerySnapshot>(
+                  stream: _databaseMethods.getTenderDetails(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                    if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                      return const Center(child: Text('No tenders available'));
+                    }
+
+                    var tenders = snapshot.data!.docs.map((doc) {
+                      return doc.data() as Map<String, dynamic>;
+                    }).toList();
+
+                    // Filter and search tenders
+                    tenders = tenders.where((tender) {
+                      final tenderId =
+                          tender['tenderId'].toString().toLowerCase();
+                      final method = tender['method'].toString().toLowerCase();
+                      final department =
+                          tender['department'].toString().toLowerCase();
+                      final location =
+                          tender['location'].toString().toLowerCase();
+                      final lastDate =
+                          tender['tenderLastDate'].toString().toLowerCase();
+
+                      final matchesSearch = searchQuery.isEmpty ||
+                          tenderId.contains(searchQuery) ||
+                          method.contains(searchQuery) ||
+                          department.contains(searchQuery) ||
+                          location.contains(searchQuery) ||
+                          lastDate.contains(searchQuery);
+
+                      final matchesFilter = filterMethod.isEmpty ||
+                          method == filterMethod.toLowerCase();
+
+                      return matchesSearch && matchesFilter;
+                    }).toList();
+
+                    // Sort tenders by last date
+                    tenders.sort((a, b) {
+                      final dateA = DateTime.parse(a['tenderLastDate']);
+                      final dateB = DateTime.parse(b['tenderLastDate']);
+                      return dateA.compareTo(dateB);
+                    });
+
+                    return ListView.builder(
+                      itemCount: tenders.length,
+                      itemBuilder: (context, index) {
+                        var tender = tenders[index];
+                        return TenderCard(tender: tender);
+                      },
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -96,7 +175,7 @@ class _TenderListScreenState extends State<TenderListScreen> {
 class TenderCard extends StatelessWidget {
   final Map<String, dynamic> tender;
 
-   TenderCard({Key? key, required this.tender}) : super(key: key);
+  const TenderCard({super.key, required this.tender});
 
   @override
   Widget build(BuildContext context) {
@@ -162,5 +241,3 @@ class TenderCard extends StatelessWidget {
     );
   }
 }
-
-

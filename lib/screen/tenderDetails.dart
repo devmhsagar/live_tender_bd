@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:live_tender_bd/database/services_model.dart'; // Importing the Tender class
+// Importing the Tender class
 
 class TenderDetailScreen extends StatelessWidget {
   final Map<String, dynamic> tender;
-  TenderDetailScreen({Key? key, required this.tender}) : super(key: key);
+  const TenderDetailScreen({super.key, required this.tender});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,7 +24,8 @@ class TenderDetailScreen extends StatelessWidget {
             children: [
               Container(
                 color: Colors.black,
-                padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
                 width: double.infinity,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
