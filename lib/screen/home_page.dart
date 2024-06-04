@@ -1,12 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:live_tender_bd/database/services.dart';
-import 'package:live_tender_bd/screen/tenderDetails.dart';
+import 'package:live_tender_bd/screen/tender_details.dart';
 
 class TenderListScreen extends StatefulWidget {
   const TenderListScreen({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _TenderListScreenState createState() => _TenderListScreenState();
 }
 
@@ -96,6 +97,7 @@ class _TenderListScreenState extends State<TenderListScreen> {
                             value: method,
                             child: Text(method),
                           );
+                          // ignore: unnecessary_to_list_in_spreads
                         }).toList(),
                         const PopupMenuItem<String>(
                           value: 'Reset Filter',
@@ -144,7 +146,13 @@ class _TenderListScreenState extends State<TenderListScreen> {
                       final matchesFilter = filterMethod.isEmpty ||
                           method == filterMethod.toLowerCase();
 
-                      return matchesSearch && matchesFilter;
+                      // Check if the tender's last date is in the future
+                      final tenderLastDate =
+                          DateTime.parse(tender['tenderLastDate']);
+                      final isFutureDate =
+                          tenderLastDate.isAfter(DateTime.now());
+
+                      return matchesSearch && matchesFilter && isFutureDate;
                     }).toList();
 
                     // Sort tenders by last date

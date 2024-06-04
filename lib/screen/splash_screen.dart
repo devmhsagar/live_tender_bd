@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:live_tender_bd/screen/homepage.dart';
+import 'package:live_tender_bd/screen/home_page.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
@@ -7,10 +7,10 @@ class SplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Navigate to TenderListScreen after a delay
-    Future.delayed(Duration(seconds: 3), () {
+    Future.delayed(const Duration(seconds: 3), () {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => TenderListScreen()),
+        MaterialPageRoute(builder: (context) => const TenderListScreen()),
       );
     });
 
@@ -24,7 +24,7 @@ class SplashScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Image.asset('assets/images/splash_logo.png', width: 120),
+                  Image.asset('assets/images/splash_logo.png', width: 100),
                   const SizedBox(height: 10),
                   const Text(
                     'livetenderbd.com',
