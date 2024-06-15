@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "928307222734",
+    "project_id": "livetenderbdadmin",
+    "storage_bucket": "livetenderbdadmin.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:928307222734:android:ee6fb06f8d5053c340589f",
+        "android_client_info": {
+          "package_name": "com.livetenderbd.live_tender_bd"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB7-fVJ8pTdJW51FREPA7LBEPxHsqN8YKw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
